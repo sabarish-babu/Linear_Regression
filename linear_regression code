@@ -1,0 +1,48 @@
+import csv
+x=[]
+y=[]
+#to read the csv file by using the pacakages of csv
+with open('test1.csv','r') as file:
+    data= csv.reader(file)
+    for row in data:
+        x.append(float(row[0]))
+        y.append(float(row[1]))
+
+N=len(x)
+d=4
+#find the value of xbar and y bar
+xbar=round(sum(x)/N,d)
+ybar=round(sum(y)/N,d)
+
+# to find the value of Cov(x,y) for that have identify the value of (yi-ybar)(xi-xbar) ---> d*e
+xi_xbar=[]
+for i in x:
+    xi_xbar.append(round(i-xbar,d))
+yi_ybar=[]
+for i in y:
+    yi_ybar.append(round(i-ybar,d))
+
+#the value of the covarance of x and y is :
+covx_y=round((sum([round(f*e,d) for f,e in zip(xi_xbar,yi_ybar)])/(N-1)),d)
+
+# the value of varience of x:
+varx=round((sum([round(f*e,d) for f,e in zip(xi_xbar,xi_xbar)])/(N-1)),d)
+
+# to find the intercept and slope vale ie. a and b value we known that a= ybar-b*xbar where b = cov(x,y)/var(x)
+# the value of b is:
+b = round(covx_y/varx,d)
+
+# the value of a is:
+a= round(ybar -(b*xbar),d)
+
+print("Intercept(a),slope(b) :",a,b)
+# to find the MSE value and the prediction value:
+ypredict=[]
+for i in x:
+    ypredict.append(round(a+(b*i),d))
+print("Predicted Value : ",ypredict)
+mse=round(sum([round((f-e)*(f-e),d) for f,e in zip(y,ypredict)])/N,d)
+print("MSE:",mse)
+
+#question to predict the car's price at the age of 3, and 13
+print("the prediction of car's age at 3 and 13 is ", (round(a+(b*3),d),round((a+(b*13)),d)))
